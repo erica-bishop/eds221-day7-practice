@@ -4,14 +4,157 @@ format: html
 editor: visual
 ---
 
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+library(lubridate)
+library(kableExtra)
+```
+
 ## Joins
+
+Using datapasta to insert data (use datapasta with caution - not a good reproducible way to work but for this case in quicikly getting some data from a web page its the way to go)
+
+```{r}
+animals <- tibble::tribble(
+             ~location,   ~species,  ~maturity,
+             "lagoon",   "bobcat",    "adult",
+              "bluff",   "coyote", "juvenile",
+              "creek",      "fox",    "adult",
+               "oaks", "squirrel", "juvenile",
+              "bluff",   "bobcat",    "adult"
+             )
+
+sites <- tibble::tribble(
+           ~location,      ~full_site_name, ~jurisdiction,
+             "beach",       "Goleta Beach",     "SB City",
+            "lagoon",        "UCSB Lagoon",        "UCSB",
+             "bluff",       "Ellwood Mesa",     "SB City",
+              "oaks", "Fremont Campground",        "USFS"
+           )
+
+
+```
 
 ### Full join
 
+```{r}
+fulljoin_example <- full_join(animals, sites, by = "location")
+```
+
 ### Left Join
+
+```{r}
+left_join_example <- left_join(animals, sites, by = "location")
+```
 
 ### Inner Join
 
+```{r}
+inner_join_example <- inner_join(animals, sites, by = "location")
+```
+
+```{r}
+sites_2 <- sites |> 
+  rename(loc = location)
+
+```
+
+Example of when key variable doesn't match:
+
+```{r}
+nonmatching <- full_join(animals, sites_2, by = c("location" = "loc"))
+
+```
+
 ### Semi Join
 
+```{r}
+semi_join_example <- semi_join(animals, sites)
+```
+
 ### Anti join
+
+```{r}
+anti_join_example <- anti_join(animals, sites, by = "location")
+
+```
+
+# Data wrangling refresher with penguins
+
+Write a single sequence to include penguins only from Biscoe and Dream islands, remove year and sex variables, and add new column called body_mass_kg, and reneame island to location
+
+```{r}
+
+penguin_wranglin <- penguins |> 
+  filter(penguins$island %in% c("Biscoe", "Dream")) |> 
+  select(-year, -sex) |> 
+  mutate(body_mass_kg = body_mass_g / 1000) |> 
+  rename(location = island)
+
+```
+
+# Dates
+
+Dates can be tricky because they have:
+
+-   different formats
+
+-   different resolutions
+
+-   leap years
+
+-   times of day
+
+-   time zones
+
+-   day of week
+
+How can we make dates clear and easy to wrangle?
+
+Format: **ISO 8601** provides an unambiguous and well-defined methods of representing dates and times, particularly when data is transferred between coiuntries with different conventions for writing numeric dates and times
+
+**YYYY-MM-DD** Always keep the leading zeroes, will always have 8 digits (or what you do have in the same format)
+
+Or for more.... **YYYY-MM-DDThh:mm:ssTZD** The T just signifies the following is for time, on 24 hr, then time-zone designator (TZD) TZD shows + or - from UTC (coordinated universal time) i.e. -07:00
+
+For example: February 18, 1996 at 8:34pm PST in Santa Barbara?
+
+1996-02-18T20:34-07:00
+
+For example: 12/5/2002 at 2:41am in Santa barbara?
+
+2002-12-05T02:41-07:00
+
+The `{lubridate}` package makes it easier to do things R does with date and time and makes it possible to do the things that R doesn't do
+
+One of the best features is parsing date-time data quickly and mostly painlessly
+
+As long as you know the format of your date data (i.e. mm/dd/yy or dd/mm/yy) functions differ by order: i.e. `mdy()` or `dmy()`
+
+When you convert with lubridate, you'll get: `date` classes from ymd/dmy/mdy functions `POSIXct`(portable operating system continuous time) - can convert to TZ using `with_tz()`
+
+# Wrangling strings
+
+Strings are ordered sequences of characters
+
+Regular expressions (`regex`) are patterns used to match character combinations in strings - helps search strings
+
+## Using `{stringr}`
+
+`{stringr}` contains functions designed to make working with strings easier - including easier ways to do things like:
+
+-   detecting string patters `str_detect()` output TRUE or FALSE if the pattern is detected
+
+-   replacing string patterns `str_replace()` replaces a string pattern with something else
+
+-   counting, collapsing, etc.
+
+
+
+
+
+
+
+
+
