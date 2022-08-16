@@ -221,8 +221,40 @@ week(umber_bday)
 
 ```
 
+```{r}
+
+urchin_counts <- tribble(
+  ~date, ~species, ~size_mm,
+  "10/3/2020", "purple", 55,
+  "10/4/2020", "red", 48,
+  "11/17/2020", "red", 67
+)
+#when mutating with same name as existing column, it overwrites. if creating a new name, it will add a new column
+
+urchin_ymd <- urchin_counts |> 
+  mutate(date = mdy(date)) |> 
+  mutate(year = year(date),
+         month = month(date),
+         day = day(date))
+
+#changed class from character to date
 
 
+```
+
+
+```{r}
+day_1 <- ymd("2020-01-06")
+day_2 <- ymd("2020-05-18")
+
+time_interval <- interval(day_1, day_2)
+
+class(time_interval)
+
+time_length(time_interval, "year")
+#time_length allows you to measure interval lengths or between times
+
+```
 
 
 
