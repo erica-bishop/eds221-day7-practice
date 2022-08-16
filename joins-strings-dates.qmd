@@ -150,6 +150,76 @@ Regular expressions (`regex`) are patterns used to match character combinations 
 
 -   counting, collapsing, etc.
 
+## Date examples with `{lubridate}`
+
+```{r}
+
+my_date <- "05-20-1997"
+lubridate::mdy(my_date)
+#lubridate functions are mdy, ymd, dmy
+
+date2 <- "11/7/2003"
+lubridate::dmy(date2)
+
+date3 <- "08-Jun_1974"
+lubridate::dmy(date3)
+
+date4 <- "19610518"
+lubridate::ymd(my_date)
+
+date5 <- "05/20/97"
+lubridate::mdy(date5)
+
+
+  
+```
+
+```{r}
+
+lubridate::ymd("1942-08-30")
+
+lubridate::dmy("08/08/69")
+
+time <- "2020-08-12 11:18"
+
+time <- ymd_hm(time)
+
+class(time)
+
+```
+Can also use lubridate to convert time zones - using the Olson name for the time zone
+```{r}
+with_tz(time, "America/Los_Angeles")
+```
+
+```{r}
+
+with_tz(time, "America/Hawaii")
+
+my_time <- lubridate::ymd_hms(time)
+
+#can pull individual pieces of time with:
+
+year(my_time)
+day(my_time)
+hour(my_time)
+minute(my_time)
+second(my_time)
+
+#parsing pieces becomes very useful for exploring and analyzing data in different ways
+```
+
+```{r}
+umber_bday <- lubridate::ymd("20010411")
+
+wday(umber_bday, label = TRUE)
+
+wday("1997-05-20", label = TRUE)
+
+week(umber_bday)
+#shows week of the year
+
+```
 
 
 
